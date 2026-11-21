@@ -1,0 +1,1053 @@
+﻿@{
+    ViewData["Title"] = "Carrito - Juan de la Rosa";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-panel: rgba(30, 30, 30, 0.65);
+            --primary: #FFC107;
+            --secondary: #E53935;
+            --accent: #FF9800;
+            --text-light: #F5F5F5;
+            --text-muted: #9e9e9e;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-light);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* FONDO ÉPICO */
+        .fondo-epico {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            background-color: #0a0a0a;
+            overflow: hidden;
+        }
+
+        .humo {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+        }
+
+        .humo-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--secondary);
+            top: -10%;
+            left: -10%;
+            animation: flotarHumo1 25s ease-in-out infinite alternate;
+        }
+
+        .humo-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent);
+            bottom: -20%;
+            right: -10%;
+            animation: flotarHumo2 30s ease-in-out infinite alternate;
+        }
+
+        .humo-3 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: 40%;
+            left: 40%;
+            animation: flotarHumo3 20s ease-in-out infinite alternate;
+        }
+
+        @@keyframes flotarHumo1 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(100px, 50px) scale(1.2);
+            }
+        }
+
+        @@keyframes flotarHumo2 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(-100px, -50px) scale(1.1);
+            }
+        }
+
+        @@keyframes flotarHumo3 {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                transform: translate(-40%, -60%) scale(1.3);
+            }
+        }
+
+        .brasa {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary), 0 0 20px var(--secondary);
+            animation: subirBrasa linear infinite;
+        }
+
+        @@keyframes subirBrasa {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .anim-slide-up {
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @@keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .anim-fade-in {
+            animation: fadeIn 1s ease forwards;
+            opacity: 0;
+        }
+
+        @@keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+        }
+
+            .hover-lift:hover {
+                transform: translateY(-5px) scale(1.01);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            }
+
+        /* HEADER */
+        .main-header {
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 193, 7, 0.2);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .header-logo {
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            background-color: #000;
+            box-shadow: 0 0 20px rgba(255, 193, 7, 0.3);
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @@keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 15px rgba(255, 193, 7, 0.2);
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(255, 193, 7, 0.6);
+            }
+        }
+
+        .brand-title {
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: var(--primary);
+            letter-spacing: 1.5px;
+            margin: 0;
+            line-height: 1;
+            text-shadow: 0 2px 10px rgba(255,193,7,0.2);
+        }
+
+        .brand-subtitle {
+            font-size: 0.7rem;
+            color: var(--secondary);
+            letter-spacing: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .user-badge {
+            text-align: right;
+            margin-right: 15px;
+            line-height: 1.2;
+        }
+
+        .user-name {
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        .user-role {
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .btn-logout {
+            border: 1px solid rgba(229, 57, 53, 0.5);
+            color: var(--secondary);
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+            .btn-logout:hover {
+                background-color: var(--secondary);
+                color: white;
+                box-shadow: 0 0 15px rgba(229, 57, 53, 0.4);
+            }
+
+        /* TARJETAS */
+        .card-resumen {
+            background: var(--bg-panel);
+            backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            text-align: center;
+            padding: 20px;
+            border-radius: 20px;
+            font-weight: 800;
+        }
+
+        .bg-total {
+            background: linear-gradient(135deg, rgba(255, 213, 79, 0.9), rgba(255, 179, 0, 0.9));
+            color: #121212;
+            border: none;
+            box-shadow: 0 10px 20px rgba(255, 179, 0, 0.2);
+        }
+
+        .bg-efectivo {
+            background: linear-gradient(135deg, rgba(102, 187, 106, 0.9), rgba(67, 160, 71, 0.9));
+            color: white;
+            border: none;
+            box-shadow: 0 10px 20px rgba(67, 160, 71, 0.2);
+        }
+
+        .bg-qr {
+            background: linear-gradient(135deg, rgba(41, 182, 246, 0.9), rgba(2, 136, 209, 0.9));
+            color: white;
+            border: none;
+            box-shadow: 0 10px 20px rgba(2, 136, 209, 0.2);
+        }
+
+        .bg-jamaica {
+            background: linear-gradient(135deg, #9C27B0, #6A1B9A);
+            color: white;
+            border: none;
+            box-shadow: 0 10px 20px rgba(106, 27, 154, 0.2);
+        }
+
+        /* PRODUCTOS */
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+        }
+
+            .section-title i {
+                color: var(--primary);
+                margin-right: 12px;
+            }
+
+        .categoria-titulo {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 193, 7, 0.2);
+            padding-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+            .categoria-titulo i {
+                margin-right: 10px;
+            }
+
+        .producto-card {
+            background: var(--bg-panel);
+            border-radius: 16px;
+            padding: 15px;
+            border: var(--glass-border);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+            .producto-card:hover {
+                border-color: rgba(255, 193, 7, 0.4);
+                background: rgba(40, 40, 40, 0.8);
+            }
+
+        .producto-img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            margin-right: 15px;
+            background-color: #000;
+        }
+
+        .producto-nombre {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .producto-precio {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .btn-add {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
+        }
+
+        .producto-card:hover .btn-add {
+            background-color: var(--primary);
+            color: #000;
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 15px rgba(255,193,7,0.5);
+        }
+
+        /* CARRITO */
+        .carrito-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(20px);
+            border: var(--glass-border);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .carrito-header {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+            border-bottom: 1px solid rgba(255, 193, 7, 0.2);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .item-carrito {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-pago {
+            font-weight: 800;
+            font-size: 1.05rem;
+            padding: 15px;
+            border-radius: 12px;
+            transition: all 0.3s;
+            width: 100%;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-efe {
+            background: linear-gradient(135deg, #43A047, #2E7D32);
+            color: white;
+            box-shadow: 0 5px 15px rgba(67, 160, 71, 0.3);
+        }
+
+        .btn-qr {
+            background: linear-gradient(135deg, #0288D1, #01579B);
+            color: white;
+            box-shadow: 0 5px 15px rgba(2, 136, 209, 0.3);
+        }
+
+        .btn-pago:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        .total-pagar {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-align: right;
+            margin-top: 20px;
+            text-shadow: 0 2px 10px rgba(255,193,7,0.2);
+        }
+
+        /* TABLA Y FOOTER */
+        .table-custom {
+            color: #ccc;
+            font-size: 0.85rem;
+        }
+
+            .table-custom th {
+                background: rgba(0,0,0,0.5);
+                color: var(--primary);
+                border-color: #333;
+                font-weight: 600;
+            }
+
+            .table-custom td {
+                border-color: #333;
+                vertical-align: middle;
+            }
+
+        .footer {
+            margin-top: auto;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+            .footer-text span {
+                color: var(--primary);
+                font-weight: 800;
+            }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 193, 7, 0.3);
+            border-radius: 10px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 193, 7, 0.6);
+            }
+
+        /* BOTÓN FLOTANTE MÓVIL */
+        .btn-flotante-carrito {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: auto;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            z-index: 1050;
+            cursor: pointer;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid #fff;
+            animation: pulseBoton 2s infinite;
+        }
+
+        @@keyframes pulseBoton {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 193, 7, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+            }
+        }
+
+        /* MEDIA QUERIES */
+        @@media (min-width: 992px) {
+            .col-sticky {
+                position: sticky;
+                top: 100px;
+                height: fit-content;
+            }
+        }
+        
+        @@media (max-width: 991px) {
+            .col-sticky {
+                margin-top: 30px;
+            }
+
+            .carrito-panel {
+                position: relative;
+                top: 0;
+            }
+
+            .btn-flotante-carrito {
+                display: flex;
+            }
+
+            .carrito-desktop {
+                display: none !important;
+            }
+
+            .main-header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .acciones-movil {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                width: 100%;
+            }
+
+                .acciones-movil .btn {
+                    flex: 1 1 40%;
+                    margin: 0 !important;
+                    font-size: 0.8rem;
+                    padding: 8px;
+                }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FONDO ÉPICO -->
+    <div class="fondo-epico">
+        <div class="humo humo-1"></div><div class="humo humo-2"></div><div class="humo humo-3"></div>
+        <div class="brasa" style="width: 8px; height: 8px; left: 10%; animation-duration: 8s; animation-delay: 0s;"></div>
+        <div class="brasa" style="width: 5px; height: 5px; left: 20%; animation-duration: 12s; animation-delay: 2s;"></div>
+        <div class="brasa" style="width: 10px; height: 10px; left: 35%; animation-duration: 10s; animation-delay: 4s;"></div>
+        <div class="brasa" style="width: 6px; height: 6px; left: 50%; animation-duration: 15s; animation-delay: 1s;"></div>
+        <div class="brasa" style="width: 7px; height: 7px; left: 65%; animation-duration: 9s; animation-delay: 3s;"></div>
+        <div class="brasa" style="width: 9px; height: 9px; left: 80%; animation-duration: 11s; animation-delay: 5s;"></div>
+        <div class="brasa" style="width: 4px; height: 4px; left: 90%; animation-duration: 14s; animation-delay: 2.5s;"></div>
+        <div class="brasa" style="width: 6px; height: 6px; left: 45%; animation-duration: 13s; animation-delay: 6s;"></div>
+    </div>
+
+    <header class="main-header">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-3 anim-fade-in">
+                <div class="logo-wrapper">
+                    <img src="~/images/logo.jpg" alt="Big Mama" class="header-logo" onerror="this.src='https://via.placeholder.com/65/000000/FFC107?text=BM'">
+                </div>
+                <div><h1 class="brand-title">BIG MAMA BURGERS</h1><span class="brand-subtitle">Esencia Casera</span></div>
+            </div>
+            <div class="acciones-movil">
+                <a href="/Reporte/GenerarPDF" target="_blank" class="btn btn-outline-warning fw-bold rounded-pill"><i class="fas fa-file-pdf"></i> PDF</a>
+                <button class="btn btn-outline-danger fw-bold rounded-pill" data-bs-toggle="modal" data-bs-target="#modalGastos"><i class="fas fa-money-bill-transfer"></i> Gastos</button>
+                <button class="btn btn-outline-info fw-bold rounded-pill" data-bs-toggle="modal" data-bs-target="#modalFaltantes"><i class="fas fa-clipboard-list"></i> Faltantes</button>
+                <a href="/Login" class="btn btn-logout fw-bold rounded-pill"><i class="fas fa-power-off"></i> Salir</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mt-5 mb-5 flex-grow-1">
+        <div class="row">
+            <div class="col-12">
+                @if (TempData["Mensaje"] != null)
+                {
+                    <div class="alert alert-success fw-bold text-center shadow-lg anim-slide-up">@TempData["Mensaje"]</div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger fw-bold text-center shadow-lg anim-slide-up">@TempData["Error"]</div>
+                }
+            </div>
+        </div>
+
+        <!-- TARJETAS DE RESUMEN -->
+        <div class="row mb-5 anim-slide-up" style="animation-delay: 0.1s;">
+            <div class="col-md-3 mb-3">
+                <div class="card-resumen bg-total hover-lift">
+                    <h6 class="mb-1 text-uppercase" style="font-size: 0.8rem; opacity: 0.8;">Total del Día</h6>
+                    <h2 class="mb-0" style="font-weight: 900;">Bs. @(ViewBag.Resumen.TotalDia - ViewBag.GastosTotales)</h2>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card-resumen bg-efectivo hover-lift">
+                    <h6 class="mb-1 text-uppercase" style="font-size: 0.8rem; opacity: 0.8;">Efectivo en Mano</h6>
+                    <h2 class="mb-0" style="font-weight: 900;">Bs. @ViewBag.Resumen.TotalEfectivo</h2>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card-resumen bg-qr hover-lift">
+                    <h6 class="mb-1 text-uppercase" style="font-size: 0.8rem; opacity: 0.8;">Recaudado por QR</h6>
+                    <h2 class="mb-0" style="font-weight: 900;">Bs. @ViewBag.Resumen.TotalQR</h2>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card-resumen bg-jamaica hover-lift">
+                    <h6 class="mb-1 text-uppercase" style="font-size: 0.8rem; opacity: 0.8;">Vasos Jamaica</h6>
+                    <h2 class="mb-0" style="font-weight: 900;"><i class="fas fa-wine-glass-alt"></i> @ViewBag.VentasJamaica</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL DE CONTROL DE STOCK -->
+        <div class="row mb-4 anim-slide-up" style="animation-delay: 0.15s;">
+            <div class="col-12">
+                <div class="card" style="background: rgba(30,30,30,0.9); border: 1px solid var(--primary); border-radius: 15px;">
+                    <div class="card-header" style="background: rgba(0,0,0,0.6); color: var(--primary); font-weight: bold;">
+                        <i class="fas fa-tasks"></i> Control de Insumos (Stock)
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2">
+                            @foreach (var insumo in ViewBag.InsumosControl)
+                            {
+                                <div class="col-md-4 col-6">
+                                    <form asp-action="CambiarEstadoInsumo" method="post" class="m-0">
+                                        <input type="hidden" name="idInsumo" value="@insumo.IdInsumo" />
+                                        @if (insumo.Disponible)
+                                        {
+                                            <input type="hidden" name="disponible" value="false" />
+                                            <button type="submit" class="btn w-100 fw-bold" style="background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; color: #75ff9b;">
+                                                <i class="fas fa-check-circle"></i> @insumo.Nombre: @insumo.Stock (HAY)
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <input type="hidden" name="disponible" value="true" />
+                                            <button type="submit" class="btn w-100 fw-bold" style="background: rgba(220, 53, 69, 0.2); border: 1px solid #dc3545; color: #ff8a93;">
+                                                <i class="fas fa-times-circle"></i> @insumo.Nombre: NO HAY
+                                            </button>
+                                        }
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Catálogo -->
+            <div class="col-lg-7 anim-slide-up" style="animation-delay: 0.2s;">
+                <h3 class="section-title"><i class="fas fa-burger"></i> Catálogo de Productos</h3>
+                @{
+                    var productos = ViewBag.Productos as List<BigMamaBurgersWeb.Models.Producto>; var categorias = productos?.Select(p => p.Categoria).Distinct().ToList();
+                }
+                @if (productos != null && categorias != null)
+                {
+                    foreach (var cat in categorias)
+                    {
+                        <div class="categoria-titulo"><i class="fas fa-utensils"></i> @cat</div>
+                        <div class="row">
+                            @foreach (var prod in productos.Where(p => p.Categoria == cat))
+                            {
+                                <div class="col-md-6">
+                                    <div class="producto-card hover-lift" onclick="agregarAlCarrito(@prod.IdProducto, '@prod.Nombre', @prod.Precio)">
+                                        <img src="~/images/productos/@prod.ImagenUrl" class="producto-img" onerror="this.src='https://via.placeholder.com/65/1E1E1E/FFC107?text=IMG'" alt="@prod.Nombre">
+                                        <div style="flex: 1;"><div class="producto-nombre">@prod.Nombre</div><div class="producto-precio">Bs. @prod.Precio</div></div>
+                                        <button type="button" class="btn-add"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Carrito Escritorio -->
+            <div class="col-lg-5 col-sticky anim-slide-up carrito-desktop" style="animation-delay: 0.3s;">
+                <div class="carrito-panel">
+                    <div class="carrito-header"><i class="fas fa-clipboard-list me-2"></i> Comanda Actual</div>
+                    <div id="listaCarrito" style="max-height: 350px; overflow-y: auto; padding-right: 5px; min-height: 150px;"></div>
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+                    <div class="total-pagar">Total: Bs. <span id="spanTotal">0.00</span></div>
+                    <div class="row g-3 mt-4">
+                        <div class="col-12">
+                            <button type="button" class="btn-pago btn-efe" onclick="abrirModalPago()" style="background: linear-gradient(135deg, #FFC107, #FF9800); color: black;">
+                                <i class="fas fa-cash-register me-2"></i> COBRAR PEDIDO
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Historial -->
+        <div class="row mt-4">
+            <div class="col-12 anim-slide-up" style="animation-delay: 0.4s;">
+                <h5 class="text-warning mb-3" style="font-weight: 700;"><i class="fas fa-history me-2"></i> Últimos Pedidos Entregados</h5>
+                <div style="max-height: 350px; overflow-y: auto; padding-right: 5px;">
+                    @if (ViewBag.MisVentas != null)
+                    {
+                        @foreach (var pedido in ViewBag.MisVentas)
+                        {
+                            <div class="card mb-2" style="background: rgba(30, 30, 30, 0.8); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px;">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2 pb-2" style="border-bottom: 1px dashed #444;">
+                                        <span style="font-size: 0.85rem; color: #AAAAAA; font-weight: 500;">
+                                            <i class="far fa-clock me-1" style="color: #FFC107;"></i> @pedido.Hora
+                                        </span>
+                                        <div>
+                                            <span class="fw-bold text-warning me-2" style="font-size: 1rem;">Bs. @pedido.TotalPedido</span>
+                                            @if (pedido.Metodo == "QR")
+                                            {
+                                                <span class="badge" style="background: #0288D1;">QR</span>
+                                            }
+                                            else if (pedido.Metodo == "Mixto")
+                                            {
+
+                                                <span class="badge" style="background: #9C27B0;">Mixto</span>
+                                            }
+                                            else
+                                            {
+
+                                                <span class="badge" style="background: #43A047;">Efe</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <ul class="list-unstyled mb-0" style="font-size: 0.9rem;">
+                                        @foreach (var item in pedido.Detalle.Split(" | "))
+                                        {
+                                            <li class="mb-1" style="color: #F5F5F5;">
+                                                <i class="fas fa-check-circle text-warning me-2" style="font-size: 0.8rem;"></i> @item
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-4">No hay pedidos registrados hoy.</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- BOTÓN FLOTANTE MÓVIL -->
+    <div class="btn-flotante-carrito" onclick="abrirModalPago()">
+        <span><i class="fas fa-shopping-cart"></i> Ver Pedido</span>
+        <span>Bs. <span id="totalFlotante">0.00</span></span>
+    </div>
+
+    <!-- MODAL DE PAGO MIXTO -->
+    <div class="modal fade" id="modalPagoMixto" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: #1E1E1E; border: 2px solid #FFC107;">
+                <div class="modal-header border-bottom border-warning">
+                    <h5 class="modal-title text-warning"><i class="fas fa-cash-register"></i> Cobrar Pedido</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    
+                    <!-- QR MÁS GRANDE -->
+                    <div class="text-center mb-3">
+                        <img src="@ViewBag.QrUrl" alt="QR de Pago" class="img-fluid rounded" style="max-width: 250px; width: 100%; border: 4px solid var(--primary);" />
+                        <p class="text-light small mt-2 fw-bold">Escanea aquí para pagar por QR</p>
+                    </div>
+
+                    <h4 class="text-center text-light mb-4">Total a Cobrar: <br><span class="text-warning fs-2 fw-bold">Bs. <span id="totalCobrar">0.00</span></span></h4>
+                    
+                    <form asp-action="RegistrarCarrito" method="post" onsubmit="return prepararEnvioMixto()">
+                        <input type="hidden" name="carritoJson" id="inputCarritoJsonMixto" />
+                        <input type="hidden" name="total" id="inputTotalMixto" />
+
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <label class="form-label text-light fw-bold"><i class="fas fa-money-bill-wave text-success"></i> Efectivo (Bs)</label>
+                                <input type="number" step="0.10" name="montoEfectivo" id="inputMontoEfectivo" class="form-control bg-dark text-light border-success form-control-lg" value="0.00" oninput="calcularVuelto()" />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label text-light fw-bold"><i class="fas fa-qrcode text-info"></i> Pago QR (Bs)</label>
+                                <input type="number" step="0.10" name="montoQR" id="inputMontoQR" class="form-control bg-dark text-light border-info form-control-lg" value="0.00" oninput="calcularVuelto()" />
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mb-3">
+                            <span id="mensajeValidacion" class="fw-bold"></span>
+                        </div>
+
+                        <button type="submit" id="btnConfirmarPago" class="btn btn-warning w-100 fw-bold py-3 fs-5">
+                            <i class="fas fa-check-circle"></i> CONFIRMAR PAGO
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALES (GASTOS, FALTANTES) -->
+    <div class="modal fade" id="modalGastos" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background: #1E1E1E; border: 1px solid #E53935;">
+                <div class="modal-header border-bottom border-danger">
+                    <h5 class="modal-title text-danger"><i class="fas fa-money-bill-transfer"></i> Registrar Gasto</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-action="RegistrarGasto" method="post">
+                        <div class="mb-3">
+                            <label class="form-label text-light">Descripción del Gasto</label>
+                            <input type="text" name="descripcion" class="form-control bg-dark text-light border-secondary" required placeholder="Ej: Compra de servilletas" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-light">Monto (Bs)</label>
+                            <input type="number" step="0.10" name="monto" class="form-control bg-dark text-light border-secondary" required />
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 fw-bold">Guardar Gasto</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalFaltantes" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background: #1E1E1E; border: 1px solid #17a2b8;">
+                <div class="modal-header border-bottom border-info">
+                    <h5 class="modal-title text-info"><i class="fas fa-clipboard-list"></i> Anotar Faltante para Mañana</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-action="RegistrarFaltante" method="post">
+                        <div class="mb-4">
+                            <label class="form-label text-light">¿Qué insumo falta?</label>
+                            <input type="text" name="descripcion" class="form-control bg-dark text-light border-secondary form-control-lg" required placeholder="Ej: Mondadientes, Aceite, Pan..." />
+                            <small class="text-muted mt-2 d-block">Los jefes verán esta lista en el PDF y decidirán cuánto enviar.</small>
+                        </div>
+                        <button type="submit" class="btn btn-info w-100 fw-bold py-3">Anotar Faltante</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-text">
+                &copy; 2026 <span>BIG MAMA BURGERS</span> | Sistema de Gestión de Ventas y Despacho
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let carrito = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarCarrito();
+        });
+
+        function agregarAlCarrito(id, nombre, precio) {
+            const index = carrito.findIndex(item => item.id === id);
+            if (index !== -1) {
+                carrito[index].cantidad += 1;
+            } else {
+                carrito.push({ id: id, nombre: nombre, precio: precio, cantidad: 1 });
+            }
+            renderizarCarrito();
+        }
+
+        function eliminarDelCarrito(index) {
+            carrito.splice(index, 1);
+            renderizarCarrito();
+        }
+
+        function cambiarCantidad(index, delta) {
+            carrito[index].cantidad += delta;
+            if (carrito[index].cantidad <= 0) {
+                eliminarDelCarrito(index);
+            } else {
+                renderizarCarrito();
+            }
+        }
+
+        function renderizarCarrito() {
+            const listaDesktop = document.getElementById('listaCarrito');
+            const spanTotalDesktop = document.getElementById('spanTotal');
+            const totalFlotante = document.getElementById('totalFlotante');
+            
+            function generarHTMLCarrito() {
+                let html = '';
+                if (carrito.length === 0) {
+                    html = `
+                                                <div class="text-center text-muted py-5">
+                                                    <i class="fas fa-shopping-basket fa-3x mb-3" style="color: rgba(255,255,255,0.1);"></i>
+                                                    <p style="font-size: 0.9rem;">La comanda está vacía.<br>Agrega productos del menú.</p>
+                                                </div>`;
+                } else {
+                    carrito.forEach((item, index) => {
+                        const subtotal = item.precio * item.cantidad;
+                        html += `
+                                                    <div class="item-carrito">
+                                                        <div style="flex: 1;">
+                                                            <div style="font-weight: 600; font-size: 0.95rem;">${item.nombre}</div>
+                                                            <div style="color: var(--primary); font-weight: 800; font-size: 0.9rem;">Bs. ${subtotal.toFixed(2)}</div>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <button type="button" class="btn btn-sm btn-outline-light rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="cambiarCantidad(${index}, -1)">-</button>
+                                                            <span style="font-weight: 800; width: 20px; text-align: center;">${item.cantidad}</span>
+                                                            <button type="button" class="btn btn-sm btn-outline-light rounded-circle" style="width: 28px; height: 28px; padding: 0;" onclick="cambiarCantidad(${index}, 1)">+</button>
+                                                            <button type="button" class="btn btn-sm btn-danger ms-2 rounded-circle" style="width: 30px; height: 30px; padding: 0;" onclick="eliminarDelCarrito(${index})"><i class="fas fa-times" style="font-size: 0.8rem;"></i></button>
+                                                        </div>
+                                                    </div>
+                                                `;
+                    });
+                }
+                return html;
+            }
+
+            let total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            
+            if (listaDesktop) listaDesktop.innerHTML = generarHTMLCarrito();
+            if (spanTotalDesktop) spanTotalDesktop.innerText = total.toFixed(2);
+            if (totalFlotante) totalFlotante.innerText = total.toFixed(2);
+        }
+
+        function abrirModalPago() {
+            if (carrito.length === 0) {
+                alert("La comanda está vacía. Agrega productos antes de cobrar.");
+                return;
+            }
+            let total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            
+            document.getElementById('totalCobrar').innerText = total.toFixed(2);
+            document.getElementById('inputTotalMixto').value = total.toFixed(2);
+            
+            document.getElementById('inputMontoEfectivo').value = total.toFixed(2);
+            document.getElementById('inputMontoQR').value = "0.00";
+            
+            calcularVuelto();
+            
+            var modal = new bootstrap.Modal(document.getElementById('modalPagoMixto'));
+            modal.show();
+        }
+
+        function calcularVuelto() {
+            let total = parseFloat(document.getElementById('inputTotalMixto').value);
+            let efectivo = parseFloat(document.getElementById('inputMontoEfectivo').value) || 0;
+            let qr = parseFloat(document.getElementById('inputMontoQR').value) || 0;
+            
+            let suma = efectivo + qr;
+            let mensaje = document.getElementById('mensajeValidacion');
+            let btn = document.getElementById('btnConfirmarPago');
+
+            if (Math.abs(suma - total) < 0.01) {
+                mensaje.innerHTML = "✔ Montos correctos";
+                mensaje.style.color = "#28a745";
+                btn.disabled = false;
+            } else if (suma < total) {
+                mensaje.innerHTML = `Falta cobrar: Bs. ${(total - suma).toFixed(2)}`;
+                mensaje.style.color = "#dc3545";
+                btn.disabled = true;
+            } else {
+                mensaje.innerHTML = `Cambio a devolver: Bs. ${(suma - total).toFixed(2)}`;
+                mensaje.style.color = "#FFC107";
+                btn.disabled = false;
+            }
+        }
+
+        function prepararEnvioMixto() {
+            const jsonParaEnviar = JSON.stringify(carrito);
+            document.getElementById('inputCarritoJsonMixto').value = jsonParaEnviar;
+            return true;
+        }
+    </script>
+</body>
+</html>

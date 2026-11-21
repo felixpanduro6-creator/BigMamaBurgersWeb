@@ -1,0 +1,196 @@
+﻿@{
+    ViewData["Title"] = "Dashboard - Jefe";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            background-color: #121212;
+            color: #F5F5F5;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .header-dash {
+            background-color: #1E1E1E;
+            border-bottom: 3px solid #FFC107;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #1E1E1E;
+            border: 1px solid #333;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .card-header {
+            border-radius: 15px 15px 0 0 !important;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .bg-warning-custom {
+            background-color: #FFC107;
+            color: #121212;
+        }
+
+        .bg-danger-custom {
+            background-color: #E53935;
+            color: white;
+        }
+
+        .table {
+            color: #F5F5F5;
+            margin-bottom: 0;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: white;
+        }
+
+        .table-dark th {
+            background-color: #0a0a0a;
+            color: #FFC107;
+            border-color: #333;
+        }
+
+        .badge-qr {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .badge-efectivo {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .list-group-item {
+            background-color: transparent;
+            border-color: #444;
+            color: #F5F5F5;
+        }
+
+        .btn-cerrar {
+            border-color: #E53935;
+            color: #E53935;
+        }
+
+            .btn-cerrar:hover {
+                background-color: #E53935;
+                color: white;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="header-dash">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h2 class="mb-0" style="color: #FFC107; font-weight: 900;">
+                <i class="fas fa-chart-line"></i> Panel del Jefe
+            </h2>
+            <a href="/Login" class="btn btn-outline-danger btn-cerrar fw-bold">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <!-- Reporte de Ventas -->
+            <div class="col-md-7 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-warning-custom">
+                        <i class="fas fa-cash-register"></i> Reporte de Caja Diario
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Sucursal</th>
+                                        <th>Método</th>
+                                        <th>Pedidos</th>
+                                        <th>Total (Bs)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.Reporte)
+                                    {
+                                        <tr>
+                                            <td>@item.Fecha</td>
+                                            <td>@item.Sucursal</td>
+                                            <td>
+                                                @if (item.Metodo == "QR")
+                                                {
+                                                    <span class="badge badge-qr">QR</span>
+                                                }
+                                                else
+                                                {
+
+                                                    <span class="badge badge-efectivo">Efectivo</span>
+                                                }
+                                            </td>
+                                            <td>@item.CantidadPedidos</td>
+                                            <td class="fw-bold" style="color: #FFC107;">Bs. @item.TotalRecaudado</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerta de Stock -->
+            <div class="col-md-5 mb-4">
+                <div class="card h-100 border-danger">
+                    <div class="card-header bg-danger-custom">
+                        <i class="fas fa-exclamation-triangle"></i> Alerta de Insumos
+                    </div>
+                    <div class="card-body">
+                        @if (ViewBag.StockBajo.Count == 0)
+                        {
+                            <div class="text-center mt-5">
+                                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                                <h5 class="text-success">Todo el stock está en orden.</h5>
+                            </div>
+                        }
+                        else
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var item in ViewBag.StockBajo)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong style="color: #E53935;">@item.Insumo</strong><br />
+                                            <small class="text-muted">Mínimo: @item.StockMinimo @item.Unidad</small>
+                                        </div>
+                                        <span class="badge bg-danger rounded-pill fs-6">@item.StockActual @item.Unidad</span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
